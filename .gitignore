@@ -7,3 +7,8 @@
 .env
 
 /venv/
+
+/evaluation/debug/
+/evaluation/__pycache__/
+
+/evaluation/*.json
