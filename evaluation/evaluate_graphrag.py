@@ -2,16 +2,13 @@
 """
 GraphRAG Evaluation Script
 
-This script evaluates the graphRAG implementation by:
+This script evaluates the graphRAG system by:
 1. Loading test cases from test_cases_simple.json
 2. Querying the graphRAG system with each question
 3. Comparing responses against ground truth using three metrics:
    - Factual Accuracy: Keyword/entity matching
    - Relevance: Semantic similarity using embeddings
    - BLEU Score: Text similarity
-
-Usage:
-    python evaluate_graphrag.py
 """
 
 import json
@@ -41,7 +38,6 @@ try:
     nltk.download('punkt', quiet=True)
 except ImportError as e:
     print(f"Missing required packages: {e}")
-    print("Please install with: pip install sentence-transformers scikit-learn nltk")
     sys.exit(1)
 
 # Load environment variables
