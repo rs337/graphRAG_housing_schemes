@@ -1,0 +1,104 @@
+{
+  "test_cases": [
+    {
+      "id": "first_home_scheme_001",
+      "question": "What is the First Home Scheme and how much funding can I get?",
+      "ground_truth": "The First Home Scheme (FHS) is an affordable housing scheme that supports you to buy a new home or to build your first home. The FHS is a shared equity scheme where the government and participating banks pay up to 30% of the cost of your new home in return for a stake in the home. You can buy back the stake at any time, but you don't have to."
+    },
+    {
+      "id": "help_to_buy_001",
+      "question": "Can I use the Help to Buy Scheme with the Local Authority Home Loan?",
+      "ground_truth": "Yes, you can use the Help to Buy Scheme towards your deposit for the Local Authority Home Loan. The Local Authority Home Loan requires a deposit of at least 10% of the property's market price or purchase price, whichever is less. If you are eligible for the Help to Buy Scheme, you can use this towards your deposit."
+    },
+    {
+      "id": "help_to_buy_002", 
+      "question": "What is the maximum amount I can get from the Enhanced Help to Buy Scheme?",
+      "ground_truth": "Under the Enhanced Help to Buy Scheme (for contracts signed between 23 July 2020 and 31 December 2029), the maximum amount is €30,000 per qualifying property. You can claim relief on the lesser of: €30,000, 10% of the market value of a new build property, 10% of the approved valuation of a self-build property, or the amount of income tax and DIRT you paid for the 4 years before the year you apply."
+    },
+    {
+      "id": "vacant_property_grant_001",
+      "question": "How much can I get with the Vacant Property Refurbishment Grant?",
+      "ground_truth": "You can get up to €50,000 to renovate a vacant property and up to €70,000 if the property is derelict. If you are living on an off-shore island, you can get up to €60,000 for a vacant property or up to €84,000 for a derelict building."
+    },
+    {
+      "id": "vacant_property_grant_002",
+      "question": "How long must a property be vacant to qualify for the Vacant Property Refurbishment Grant?",
+      "ground_truth": "The property must have been vacant for at least 2 years immediately before the date you apply for the grant. You will not qualify if the property has been left unreasonably or purposely vacant so you can get the grant."
+    },
+    {
+      "id": "local_authority_home_loan_001", 
+      "question": "What are the income limits for the Local Authority Home Loan?",
+      "ground_truth": "You must have a gross annual income of less than €70,000 for single applicants and €85,000 for joint applicants. These increased limits came in on 1 March 2023 and apply nationwide."
+    },
+    {
+      "id": "local_authority_home_loan_002",
+      "question": "How much can I borrow with the Local Authority Home Loan?", 
+      "ground_truth": "You can borrow up to 90% of the market value of the property you are building or buying. The maximum market values vary by location: €360,000 in Dublin, Kildare, Wicklow; €330,000 in Cork, Galway, Louth, Meath; €300,000 in Clare, Kilkenny, Limerick, Waterford, Westmeath, Wexford; €275,000 in Carlow, Cavan, Donegal, Kerry, Laois, Leitrim, Longford, Mayo, Monaghan, Offaly, Roscommon, Sligo, Tipperary."
+    },
+    {
+      "id": "affordable_purchase_scheme_001",
+      "question": "What is the maximum equity share a local authority can take in the Affordable Purchase Scheme?",
+      "ground_truth": "The maximum equity share the local authority will take in your home is 40% and the minimum is 5%. The price you pay and the equity share are calculated by the local authority taking into account your maximum mortgage capacity and the minimum price set for the home."
+    },
+    {
+      "id": "hap_001",
+      "question": "What is the main advantage of HAP over Rent Supplement regarding employment?",
+      "ground_truth": "You can take up full-time employment and still get HAP. This is a key advantage as HAP allows you to work full-time while still receiving housing support."
+    },
+    {
+      "id": "hap_002",
+      "question": "Who pays the rent under the Housing Assistance Payment scheme?",
+      "ground_truth": "Under HAP, your local authority pays your rent directly to your landlord. You pay a weekly HAP rent contribution to your local authority, based on your income and ability to pay."
+    },
+    {
+      "id": "ras_001",
+      "question": "What is the main difference between RAS and Rent Supplement?",
+      "ground_truth": "The main difference between RAS and Rent Supplement is that you can get a full-time job and can stay in the RAS scheme, with a recalculated rent."
+    },
+    {
+      "id": "ras_002",
+      "question": "How long must you be on Rent Supplement to qualify for RAS?",
+      "ground_truth": "In general, people who are getting Rent Supplement for more than 18 months are considered for RAS. You must be getting Rent Supplement for a minimum period of 18 months and be assessed as having a long-term housing need."
+    },
+    {
+      "id": "cost_rental_001",
+      "question": "What are the income limits for Cost Rental housing?",
+      "ground_truth": "Your net household income must be below €66,000 per annum for Dublin and €59,000 for everywhere else in the country. You must also not be getting any social housing supports, including the Housing Assistance Payment (HAP)."
+    },
+    {
+      "id": "cost_rental_002",
+      "question": "How is the rent calculated in Cost Rental housing?",
+      "ground_truth": "The rent you pay is based on the cost of building, managing and maintaining the homes. It does not include any profit for a developer. The rent for cost rental homes must be at least 25% below regular market rents in an area."
+    },
+    {
+      "id": "repair_leasing_001",
+      "question": "How much funding is available under the Repair and Leasing Scheme?",
+      "ground_truth": "An interest free loan of up to €80,000 (including VAT) is available to repair each individual home leased to the local authority. For example, where a vacant former shop is converted into 4 homes, a loan of up to €320,000 is available."
+    },
+    {
+      "id": "repair_leasing_002",
+      "question": "How long must a property be vacant to qualify for the Repair and Leasing Scheme?",
+      "ground_truth": "The property must have been vacant for at least 12 months before you apply to the Repair and Leasing Scheme. You will need to provide proof that it has been vacant for this time."
+    },
+    {
+      "id": "first_home_pricing_001",
+      "question": "What are the price limits for the First Home Scheme in Dublin?",
+      "ground_truth": "For Dublin City, Dún Laoghaire-Rathdown, Fingal, South Dublin, and Co Wicklow, the price limit is €500,000 for all properties (both buying and building)."
+    },
+    {
+      "id": "scheme_relationships_001",
+      "question": "Can you combine the First Home Scheme with the Help to Buy Scheme?",
+      "ground_truth": "Yes, you can combine them, but the First Home Scheme funding is reduced to 20% if you are also getting the Help to Buy Scheme. Normally you can get up to 30% with the First Home Scheme, but this is reduced to 20% when combined with Help to Buy."
+    },
+    {
+      "id": "fresh_start_001",
+      "question": "What is a 'fresh start' applicant and which schemes accept them?",
+      "ground_truth": "A 'fresh start' applicant is someone who previously owned a home but no longer has a financial interest in it because they are divorced, separated, their relationship has ended, or they have gone through personal insolvency or bankruptcy. Fresh start applicants are accepted by the First Home Scheme, Local Authority Home Loan, and Local Authority Affordable Purchase Scheme."
+    },
+    {
+      "id": "property_requirements_001",
+      "question": "What are the key property requirements that must be met before 2008 for the Vacant Property Refurbishment Grant?",
+      "ground_truth": "The property must have been built before 2008. Before 1 May 2023, only homes built before 1993 qualified, but this was extended to include properties built before 2008."
+    }
+  ]
+} 
