@@ -1,5 +1,6 @@
 import gradio as gr
-import graphrag.api as api
+# Lazy import GraphRAG to improve startup time
+# import graphrag.api as api  # Commented out - will import later
 from pathlib import Path
 import pandas as pd
 from typing import Tuple, Dict, Any, Union
@@ -36,6 +37,24 @@ if not os.getenv("GRAPHRAG_API_KEY"):
     logger.error("GRAPHRAG_API_KEY not found in environment variables")
     raise ValueError("GRAPHRAG_API_KEY not found. Please set it in your .env file")
 
+# Global variable to hold the GraphRAG API module
+api = None
+
+def load_graphrag_api():
+    """Lazy load GraphRAG API with progress indication."""
+    global api
+    if api is None:
+        print("🔄 Loading GraphRAG API (this may take 30-90 seconds)...")
+        print("   Loading dependencies: gensim, graspologic, and other ML libraries...")
+        logger.info("Loading GraphRAG API...")
+        start_time = time.time()
+        import graphrag.api as graphrag_api
+        api = graphrag_api
+        load_time = time.time() - start_time
+        print(f"✅ GraphRAG API loaded successfully in {load_time:.1f} seconds!")
+        logger.info(f"GraphRAG API loaded successfully in {load_time:.1f} seconds")
+    return api
+
 # Load GraphRAG configuration and data
 # Get absolute path to project directory
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -47,7 +66,7 @@ RESPONSE_TYPE = "Multiple Paragraphs"  # Changed for better formatting
 CLAIM_EXTRACTION_ENABLED = False
 
 # Add timeout for searches
-SEARCH_TIMEOUT = 60  # 60 seconds timeout
+SEARCH_TIMEOUT = 120  # 120 seconds timeout (first searches can be slow)
 
 # Model configuration
 MODELS = {
@@ -141,7 +160,7 @@ async def search_with_timeout(search_func, **kwargs) -> Tuple[str, str]:
         return response, str(context)
     except asyncio.TimeoutError:
         logger.error(f"Search timed out after {SEARCH_TIMEOUT} seconds")
-        return "Error: Search timed out. Please try a more specific query or check your connection.", ""
+        return f"⏰ Search timed out after {SEARCH_TIMEOUT} seconds. Please try a more specific query or check your connection.", ""
     except Exception as e:
         logger.error(f"Search error: {str(e)}", exc_info=True)
         return f"Error: {str(e)}", ""
@@ -150,6 +169,9 @@ async def search(query: str, search_type: str, model: str, data: Dict[str, Any])
     """Perform search based on selected type."""
     try:
         logger.info(f"Starting {search_type} with model {model}")
+        
+        # Load GraphRAG API if not already loaded
+        api_module = load_graphrag_api()
         
         # Update model in config
         if hasattr(data["config"], 'llm_config'):
@@ -171,7 +193,7 @@ async def search(query: str, search_type: str, model: str, data: Dict[str, Any])
                 "dynamic_community_selection": False,
                 "response_type": RESPONSE_TYPE
             })
-            return await search_with_timeout(api.global_search, **search_params)
+            return await search_with_timeout(api_module.global_search, **search_params)
             
         elif search_type == "Local Search":
             logger.debug("Preparing Local Search parameters")
@@ -185,14 +207,14 @@ async def search(query: str, search_type: str, model: str, data: Dict[str, Any])
                 "community_level": COMMUNITY_LEVEL,
                 "response_type": RESPONSE_TYPE
             })
-            return await search_with_timeout(api.local_search, **search_params)
+            return await search_with_timeout(api_module.local_search, **search_params)
             
         else:  # Basic Search
             logger.debug("Preparing Basic Search parameters")
             search_params.update({
                 "text_units": data["text_units"]
             })
-            return await search_with_timeout(api.basic_search, **search_params)
+            return await search_with_timeout(api_module.basic_search, **search_params)
             
     except Exception as e:
         logger.error(f"Error in search: {str(e)}", exc_info=True)
@@ -269,16 +291,21 @@ def create_interface(data: Dict[str, Any], loop: asyncio.AbstractEventLoop) -> g
                 search(query, search_type, model, data),
                 loop
             )
-            response, context = future.result(timeout=SEARCH_TIMEOUT + 5)
+            
+            # Use longer timeout for the sync wrapper
+            response, context = future.result(timeout=SEARCH_TIMEOUT + 10)
             
             # Format the response for better display
             formatted_response = format_response(response)
             formatted_context = format_context_data(context)
             
             return formatted_response, formatted_context
+        except asyncio.TimeoutError:
+            logger.error(f"Search request timed out after {SEARCH_TIMEOUT + 10} seconds")
+            return f"⏰ **Search Timeout**: Your search took longer than {SEARCH_TIMEOUT} seconds and was cancelled.\n\n**Try these solutions:**\n- Make your question more specific\n- Try a different search type\n- Check your internet connection\n- The GraphRAG system might be under heavy load", ""
         except Exception as e:
             logger.error(f"Error in sync_search: {str(e)}", exc_info=True)
-            return f"Error: Search failed. Please try again. ({str(e)})", ""
+            return f"❌ **Search Error**: {str(e)}\n\nPlease try again or contact support if the issue persists.", ""
     
     # Create model choice descriptions
     model_descriptions = [f"{MODELS[m]['name']} - {MODELS[m]['description']}" for m in model_choices]
@@ -318,6 +345,11 @@ def create_interface(data: Dict[str, Any], loop: asyncio.AbstractEventLoop) -> g
 **Available Models:**
 {chr(10).join(f'- {desc}' for desc in model_descriptions)}
 
+**⚠️ Search Times:** 
+- First search: 30-90 seconds (GraphRAG API loading + processing)
+- Subsequent searches: 15-60 seconds depending on complexity
+- Searches timeout after 2 minutes
+
 **Tips for Better Results:**
 - Be specific with your questions
 - Use different search types for different kinds of information
@@ -334,10 +366,13 @@ def create_interface(data: Dict[str, Any], loop: asyncio.AbstractEventLoop) -> g
 def main():
     """Main application entry point."""
     try:
+        print("🚀 Starting GraphRAG UI...")
         logger.info("Starting GraphRAG UI...")
         
+        print("📂 Loading GraphRAG data...")
         # Load data silently
         data = load_graphrag_data()
+        print("✅ Data loaded successfully!")
         
         # Create and get event loop
         loop = asyncio.new_event_loop()
@@ -353,6 +388,10 @@ def main():
             
         loop_thread = threading.Thread(target=run_event_loop, daemon=True)
         loop_thread.start()
+        
+        print("🌐 Starting web interface...")
+        print("📝 Note: Your first search will take 30-90 seconds (API loading + processing)")
+        print("     Searches timeout after 2 minutes if no response")
         
         # Run the Gradio interface
         try:
