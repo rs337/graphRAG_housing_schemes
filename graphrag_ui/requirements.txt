@@ -1,0 +1,6 @@
+graphrag~=2.2.0
+gradio~=4.19.2
+fastapi~=0.112.0
+uvicorn~=0.30.5
+pandas~=2.2.1
+python-dotenv~=1.0.1 
