@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% load static %}{% static 'css/chat.css' %}" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Header Section -->
+    <header class="bg-primary text-white py-4 shadow-sm">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="h2 mb-0">
+                        <i class="fas fa-comments me-2"></i>
+                        GraphRAG Chat Interface
+                    </h1>
+                    <p class="mb-0 opacity-75">Intelligent search through Irish government and citizen information</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="badge bg-success" id="status-indicator">
+                        <i class="fas fa-circle me-1"></i>Ready
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Description Panel -->
+    <section class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title h5 text-primary">
+                            <i class="fas fa-info-circle me-2"></i>
+                            How to Use This Application
+                        </h3>
+                        <p class="card-text">
+                            This application uses GraphRAG technology to search through a comprehensive database 
+                            of Irish government and citizen information. Choose your search type below and ask questions 
+                            to get intelligent, context-aware answers.
+                        </p>
+                        
+                        <!-- Search Type Explanations -->
+                        <div class="row g-3 mt-2">
+                            {% for search_type in search_types %}
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded h-100 search-type-card" data-search-type="{{ search_type.value }}">
+                                    <h6 class="fw-bold text-primary">{{ search_type.label }}</h6>
+                                    <p class="mb-0 small text-muted">{{ search_type.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Interface -->
+    <main class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-white border-bottom">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-robot me-2 text-primary"></i>
+                                    Chat Interface
+                                </h5>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="clearChat()">
+                                    <i class="fas fa-trash me-1"></i>Clear Chat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Messages Area -->
+                    <div class="card-body p-0">
+                        <div id="chat-messages" class="chat-messages">
+                            <!-- Welcome message -->
+                            <div class="message bot-message">
+                                <div class="message-content">
+                                    <div class="d-flex align-items-start">
+                                        <div class="avatar bg-primary text-white me-3">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="message-bubble">
+                                                <p class="mb-2">
+                                                    <strong>Welcome to GraphRAG Chat!</strong>
+                                                </p>
+                                                <p class="mb-2">
+                                                    I can help you find information about Irish housing, government services, 
+                                                    and citizen information. Try asking me questions like:
+                                                </p>
+                                                <ul class="mb-0 small">
+                                                    {% for example in example_queries %}
+                                                    <li>
+                                                        <a href="#" class="example-query text-decoration-none" 
+                                                           data-query="{{ example.query }}" 
+                                                           data-search-type="{{ example.search_type }}">
+                                                            "{{ example.query }}"
+                                                        </a>
+                                                        <span class="text-muted"> ({{ example.description }})</span>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input Form -->
+                    <div class="card-footer bg-white border-top">
+                        <form id="chat-form" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            <!-- Search Type Selection -->
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Search Type:</label>
+                                <div class="btn-group w-100" role="group" aria-label="Search type selection">
+                                    {% for search_type in search_types %}
+                                    <input type="radio" class="btn-check" name="search_type" 
+                                           id="search_{{ search_type.value }}" value="{{ search_type.value }}"
+                                           {% if search_type.value == 'global' %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="search_{{ search_type.value }}">
+                                        {{ search_type.label }}
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- Query Input -->
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="query-input" 
+                                       placeholder="Ask me anything about Irish housing and government services..."
+                                       required>
+                                <button type="submit" class="btn btn-primary" id="send-button">
+                                    <span id="send-text">
+                                        <i class="fas fa-paper-plane me-1"></i>Send
+                                    </span>
+                                    <span id="loading-text" class="d-none">
+                                        <i class="fas fa-spinner fa-spin me-1"></i>Searching...
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">
+                                Please enter a question.
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section with Data Sources -->
+    <footer class="mt-5 py-4 bg-dark text-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5 class="h6 mb-3">
+                        <i class="fas fa-database me-2"></i>
+                        Data Sources
+                    </h5>
+                    <p class="small text-muted mb-3">
+                        This application searches through information from the following trusted sources:
+                    </p>
+                    
+                    {% for category in data_sources %}
+                    <div class="mb-3">
+                        <h6 class="small fw-bold text-white">{{ category.category }}</h6>
+                        <ul class="list-unstyled small">
+                            {% for source in category.sources %}
+                            <li class="mb-1">
+                                <a href="{{ source.url }}" target="_blank" class="text-light text-decoration-none">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    {{ source.title }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="small fw-bold mb-3">System Information</h6>
+                    <p class="small text-muted mb-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Powered by GraphRAG technology
+                    </p>
+                    <p class="small text-muted mb-2">
+                        <i class="fas fa-clock me-1"></i>
+                        Search timeout: 2 minutes
+                    </p>
+                    <p class="small text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Data updated regularly from official sources
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{% load static %}{% static 'js/chat.js' %}"></script>
+</body>
+</html> 
