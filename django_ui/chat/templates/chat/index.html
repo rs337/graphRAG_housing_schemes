@@ -1,9 +1,14 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'img/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon-16x16.png' %}" sizes="16x16">
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,9 +25,9 @@
                 <div class="col-md-8">
                     <h1 class="h2 mb-0">
                         <i class="fas fa-comments me-2"></i>
-                        GraphRAG Chat Interface
+                        KnowTheSchemes
                     </h1>
-                    <p class="mb-0 opacity-75">Intelligent search through Irish government and citizen information</p>
+                    <p class="mb-0 opacity-75">Enabling factual search of Irish housing schemes</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <span class="badge bg-success" id="status-indicator">
@@ -45,7 +50,8 @@
                         </h3>
                         <p class="card-text">
                             This application uses GraphRAG technology to search through a comprehensive database 
-                            of Irish government and citizen information. Choose your search type below and ask questions 
+                            of Irish government and Citizens Information sources. It aims to provide answeres in a simple 
+                            and easy to understand format. Choose your search type below and ask questions 
                             to get intelligent, context-aware answers.
                         </p>
                         
@@ -87,6 +93,21 @@
                         </div>
                     </div>
                     
+                    <!-- Moved Search Type Selection here, at top of chat body -->
+                    <div class="mb-3 px-3 pt-3" style="background-color: #f8f9fa;">  <!-- Added light background and padding for better visibility -->
+                        <label class="form-label small text-muted">Search Type:</label>
+                        <div class="btn-group w-100" role="group" aria-label="Search type selection">
+                            {% for search_type in search_types %}
+                            <input type="radio" class="btn-check" name="search_type" 
+                                   id="search_{{ search_type.value }}" value="{{ search_type.value }}"
+                                   {% if search_type.value == 'global' %}checked{% endif %}>
+                            <label class="btn btn-outline-primary" for="search_{{ search_type.value }}">
+                                {{ search_type.label }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
                     <!-- Chat Messages Area -->
                     <div class="card-body p-0">
                         <div id="chat-messages" class="chat-messages">
@@ -103,8 +124,8 @@
                                                     <strong>Welcome to GraphRAG Chat!</strong>
                                                 </p>
                                                 <p class="mb-2">
-                                                    I can help you find information about Irish housing, government services, 
-                                                    and citizen information. Try asking me questions like:
+                                                    I can help you find information about Irish housing schemes and to better
+                                                    understand how you can access them. Try asking me questions like:
                                                 </p>
                                                 <ul class="mb-0 small">
                                                     {% for example in example_queries %}
@@ -130,25 +151,10 @@
                     <div class="card-footer bg-white border-top">
                         <form id="chat-form" class="needs-validation" novalidate>
                             {% csrf_token %}
-                            <!-- Search Type Selection -->
-                            <div class="mb-3">
-                                <label class="form-label small text-muted">Search Type:</label>
-                                <div class="btn-group w-100" role="group" aria-label="Search type selection">
-                                    {% for search_type in search_types %}
-                                    <input type="radio" class="btn-check" name="search_type" 
-                                           id="search_{{ search_type.value }}" value="{{ search_type.value }}"
-                                           {% if search_type.value == 'global' %}checked{% endif %}>
-                                    <label class="btn btn-outline-primary" for="search_{{ search_type.value }}">
-                                        {{ search_type.label }}
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            
                             <!-- Query Input -->
                             <div class="input-group">
                                 <input type="text" class="form-control" id="query-input" 
-                                       placeholder="Ask me anything about Irish housing and government services..."
+                                       placeholder="Ask your question here..."
                                        required>
                                 <button type="submit" class="btn btn-primary" id="send-button">
                                     <span id="send-text">
@@ -178,28 +184,28 @@
                         <i class="fas fa-database me-2"></i>
                         Data Sources
                     </h5>
-                    <p class="small text-muted mb-3">
-                        This application searches through information from the following trusted sources:
-                    </p>
-                    
-                    {% for category in data_sources %}
-                    <div class="mb-3">
-                        <h6 class="small fw-bold text-white">{{ category.category }}</h6>
-                        <ul class="list-unstyled small">
-                            {% for source in category.sources %}
-                            <li class="mb-1">
-                                <a href="{{ source.url }}" target="_blank" class="text-light text-decoration-none">
-                                    <i class="fas fa-external-link-alt me-1"></i>
-                                    {{ source.title }}
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                    <div class="row">
+                        {% for category in data_sources %}
+                        <div class="col-md-6 mb-3">
+                            <h6 class="small fw-bold text-white">{{ category.category }}</h6>
+                            <ul class="list-unstyled small">
+                                {% for source in category.sources %}
+                                <li class="mb-1">
+                                    <a href="{{ source.url }}" target="_blank" class="text-light text-decoration-none">
+                                        <i class="fas fa-external-link-alt me-1"></i>
+                                        {{ source.title }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
                 <div class="col-lg-4">
-                    <h6 class="small fw-bold mb-3">System Information</h6>
+                    <h6 class="small fw-bold mb-3">
+                        <i class="fas fa-cog me-2"></i>System Information
+                    </h6>
                     <p class="small text-muted mb-2">
                         <i class="fas fa-info-circle me-1"></i>
                         Powered by GraphRAG technology

@@ -179,9 +179,25 @@ function addBotMessage(response, context, searchType) {
     const searchTypeLabel = getSearchTypeLabel(searchType);
     
     // Convert markdown-style bold text to HTML
-    const formattedResponse = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Convert line breaks to proper HTML
+    let formattedResponse = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert headers: ### Text → <h3>Text</h3>, ## Text → <h2>Text</h2>
+    formattedResponse = formattedResponse.replace(/^###\s*(.*)$/gm, '<h3 class=\"mt-3 mb-2\">$1</h3>');
+    formattedResponse = formattedResponse.replace(/^##\s*(.*)$/gm, '<h2 class=\"mt-4 mb-2\">$1</h2>');
+
+    // Handle numbered lists: Convert lines starting with '1. ' etc. to <ol><li>
+    formattedResponse = formattedResponse.replace(/(\n|^)(\d+\. .*(\n\d+\. .*)*)/g, function(match, prefix, list) {
+        const items = list.split(/\n(?=\d+\. )/).map(item => item.replace(/^\d+\. /, ''));
+        return `${prefix}<ol class=\"mb-2\">${items.map(item => `<li>${item}</li>`).join('')}</ol>`; 
+    });
+
+    // Handle bullet lists: Convert lines starting with '- ' or '* ' to <ul><li>
+    formattedResponse = formattedResponse.replace(/(\n|^)([-*] .*(\n[-*] .*)*)/g, function(match, prefix, list) {
+        const items = list.split(/\n(?=[-*] )/).map(item => item.replace(/^[-*] /, ''));
+        return `${prefix}<ul class=\"mb-2\">${items.map(item => `<li>${item}</li>`).join('')}</ul>`; 
+    });
+
+    // Convert remaining line breaks to <br>
     const htmlResponse = formattedResponse.replace(/\n/g, '<br>');
     
     const contextToggleId = `context-${Date.now()}`;

@@ -1,5 +1,11 @@
 /* Custom CSS for GraphRAG Chat Interface */
 
+/* Override Bootstrap primary color */
+:root {
+    --bs-primary: #28a745;  /* Irish-themed green */
+    --bs-primary-rgb: 40, 167, 69;  /* Matching RGB */
+}
+
 /* Chat Messages Area */
 .chat-messages {
     height: 400px;
@@ -35,9 +41,9 @@
 }
 
 .user-message .message-bubble {
-    background: #007bff;
+    background: #28a745;
     color: white;
-    border-color: #007bff;
+    border-color: #28a745;
     max-width: 80%;
 }
 
@@ -77,14 +83,14 @@
 }
 
 .search-type-card:hover {
-    border-color: #007bff !important;
+    border-color: #28a745 !important;
     background-color: #f8f9ff;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .search-type-card.active {
-    border-color: #007bff !important;
+    border-color: #28a745 !important;
     background-color: #e6f2ff;
 }
 
@@ -130,12 +136,12 @@
 
 /* Example Query Links */
 .example-query {
-    color: #007bff !important;
+    color: #28a745 !important;
     transition: color 0.2s ease;
 }
 
 .example-query:hover {
-    color: #0056b3 !important;
+    color: #1c7430 !important;  /* Darker green for hover */
     text-decoration: underline !important;
 }
 
@@ -220,8 +226,8 @@
 
 /* Search Type Button Group */
 .btn-group .btn-check:checked + .btn {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #28a745;
+    border-color: #28a745;
     color: white;
 }
 
@@ -251,3 +257,38 @@ footer a:hover {
 @keyframes spin {
     to { transform: rotate(360deg); }
 } 
+/* Ensure search type buttons have green text when not selected */
+.btn-outline-primary {
+    color: #28a745 !important;  /* Green text for unselected buttons */
+    border-color: #28a745;
+}
+
+.btn-outline-primary:hover,
+.btn-check:checked + .btn-outline-primary {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white !important;  /* White text when selected or hovered */
+}
+
+/* Confirm Send button is green (overrides any blue) */
+#send-button.btn-primary {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+#send-button.btn-primary:hover {
+    background-color: #1c7430 !important;  /* Darker green hover */
+    border-color: #1c7430 !important;
+}
+
+/* Make System Information text clearer on dark background */
+footer .text-muted {
+    color: #ffffff !important;  /* White text for better visibility */
+    opacity: 0.9;  /* Slightly softer white */
+}
+
+/* Add separator between Data Sources and System Information */
+footer .col-lg-8 {
+    border-right: 1px solid #6c757d;  /* Subtle grey vertical line */
+    padding-right: 2rem;  /* Extra space before the line */
+}

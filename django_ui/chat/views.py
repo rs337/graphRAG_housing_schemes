@@ -29,7 +29,7 @@ def index(request):
             {
                 'value': 'global',
                 'label': 'Global Search',
-                'description': 'Analyzes the entire knowledge base to provide broader insights and connections across multiple topics. Best for complex questions requiring synthesis of information.'
+                'description': 'Analyses the entire knowledge base to provide broader insights and connections across multiple topics. Best for complex questions requiring synthesis of information.'
             },
             {
                 'value': 'local', 
@@ -61,12 +61,30 @@ def index(request):
         ],
         'data_sources': [
             {
-                'category': 'Government Sources',
+                'category': 'Citizens Information Sources',
                 'sources': [
-                    {'title': 'Department of Housing Website', 'url': 'https://gov.ie/housing'},
-                    {'title': 'Citizens Information - Housing', 'url': 'https://citizensinformation.ie/housing'},
-                    {'title': 'Local Authority Housing', 'url': 'https://gov.ie/local-authority-housing'},
-                ]
+                    {'title': 'First Home Scheme', 'url': 'https://www.citizensinformation.ie/en/housing/owning-a-home/help-with-buying-a-home/first-home-scheme/'},
+                    {'title': 'Help to Buy scheme', 'url': 'https://www.citizensinformation.ie/en/housing/owning-a-home/help-with-buying-a-home/local-authority-affordable-purchase-scheme/'},
+                    {'title': 'Local Authority Home Loan', 'url': 'https://www.citizensinformation.ie/en/housing/owning-a-home/help-with-buying-a-home/local-authority-mortgages/'},
+                    {'title': 'Local Authority Affordable Purchase Scheme', 'url': 'https://www.citizensinformation.ie/en/housing/owning-a-home/help-with-buying-a-home/local-authority-affordable-purchase-scheme/'},
+                    {'title': 'Vacant Property Refurbishment Grant', 'url': 'https://www.citizensinformation.ie/en/housing/housing-grants-and-schemes/local-authority-housing-grants-and-supports/vacant-property-refurbishment-grant/'},
+                    {'title': 'Cost Rental', 'url': 'https://www.citizensinformation.ie/en/housing/renting-a-home/help-with-renting/cost-rental-housing/'},
+                    {'title': 'Repair and Leasing Scheme', 'url': 'https://www.citizensinformation.ie/en/housing/housing-grants-and-schemes/local-authority-housing-grants-and-supports/repair-and-leasing-scheme/'},
+                    {'title': 'Housing Assistance Payment', 'url': 'https://www.citizensinformation.ie/en/housing/renting-a-home/help-with-renting/housing-assistance-payment/'},
+                    {'title': 'Rental Accommodation Scheme', 'url': 'https://www.citizensinformation.ie/en/housing/local-authority-and-social-housing/rental-accommodation-scheme/'}
+                ],
+            },
+            {
+                'category': 'Gov.ie Sources',
+                'sources': [
+                    {'title': 'First Home Scheme', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/services/first-home-scheme/'},
+                    {'title': 'Local Authority Affordable Purchase Scheme', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/services/local-authority-affordable-purchase-scheme/'},
+                    {'title': 'Vacant Property Refurbishment Grant', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/services/vacant-property-refurbishment-grant/'},
+                    {'title': 'Cost Rental', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/services/cost-rental-homes/'},
+                    {'title': 'Repair and Leasing Scheme', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/publications/repair-and-leasing-scheme-rls/'},
+                    {'title': 'Housing Assistance Payment', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/services/housing-assistance-payment/'},
+                    {'title': 'Rental Accommodation Scheme', 'url': 'https://www.gov.ie/en/department-of-housing-local-government-and-heritage/services/rental-accommodation-scheme/'}
+                ],
             }
         ]
     }
